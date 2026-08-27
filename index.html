@@ -233,6 +233,10 @@
                                 </li>
                             </ul>
                         </div>
+                        <div v-if="msg.suggestions && msg.suggestions.length" class="suggestions">
+                            <span class="suggestions-label">你还可以问</span>
+                            <button v-for="item in msg.suggestions" :key="item" @click="question = item">{{ item }}</button>
+                        </div>
                         <div class="markdown-body" v-html="renderMarkdown(msg.content)"></div>
                         <span v-if="loading && index === messages.length - 1 && msg.role === 'assistant'" class="cursor"></span>
                     </div>
@@ -284,7 +288,7 @@
                 <h3>🔑 API 接入与鉴权</h3>
                 <div class="form-item">
                     <label>Bearer Authorization Token</label>
-                    <input type="text" value="Bearer prod_secure_token_2026" readonly />
+                    <input type="text" value="Bearer local_acceptance_ae71ee511f5741049383f7898751a0c2" readonly />
                 </div>
                 <div class="form-item">
                     <label>单 IP 每分钟并发限制 (Rate Limit)</label>
@@ -369,7 +373,7 @@
                 }
             }
 
-            const sendQuery = async () => {
+    const sendQuery = async () => {
                 if (!question.value.trim() || loading.value) return
 
                 const userQ = question.value
@@ -388,9 +392,9 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': 'Bearer prod_secure_token_2026'
+                            'Authorization': 'Bearer local_acceptance_ae71ee511f5741049383f7898751a0c2'
                         },
-                        body: JSON.stringify({ question: userQ, top_k: 3 })
+                        body: JSON.stringify({ question: userQ, top_k: 5, history: messages.value.slice(-8, -2).map(m => ({ role: m.role, content: m.content })) })
                     })
 
                     if (!response.ok) throw new Error(`HTTP ${response.status}`)
@@ -417,6 +421,9 @@
                                         scrollToBottom()
                                     } else if (data.type === 'content') {
                                         assistantMsg.content += data.data
+                                        scrollToBottom()
+                                    } else if (data.type === 'suggestions') {
+                                        assistantMsg.suggestions = data.data
                                         scrollToBottom()
                                     } else if (data.type === 'done') {
                                         loading.value = false

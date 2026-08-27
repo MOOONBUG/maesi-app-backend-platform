@@ -1,45 +1,76 @@
-from fastapi import FastAPI, HTTPException
+﻿import os
+from typing import Any, Dict, List
+
 import pymysql
-from pydantic import BaseModel
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field
 
-app = FastAPI(title="AI 知识库快速检索与后端服务", version="1.0")
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"), override=True)
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env.secrets"), override=True)
+app = FastAPI(title="AI Knowledge Base Search API", version="1.1.0")
 
-# 数据库配置
+
+def env_required(name: str) -> str:
+    value = os.getenv(name, "").strip()
+    if not value or value in {"your_password", "replace_me", "your_api_key"}:
+        raise RuntimeError(f"Missing valid environment variable: {name}")
+    return value
+
+
 DB_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '123456',
-    'database': 'ai_knowledge_db',
-    'charset': 'utf8mb4',
-    'cursorclass': pymysql.cursors.DictCursor
+    "host": os.getenv("DB_HOST", "127.0.0.1"),
+    "port": int(os.getenv("DB_PORT", "3306")),
+    "user": os.getenv("DB_USER", "root"),
+    "password": env_required("DB_PASSWORD"),
+    "database": os.getenv("DB_NAME", "ai_knowledge_db"),
+    "charset": "utf8mb4",
+    "cursorclass": pymysql.cursors.DictCursor,
+    "connect_timeout": 5,
+    "read_timeout": 10,
+    "write_timeout": 10,
 }
 
-# 接收前端请求的数据模型
+
 class DocumentQuery(BaseModel):
-    keyword: str
+    keyword: str = Field(..., min_length=1, max_length=2000)
+
+
+def query_documents(keyword: str) -> List[Dict[str, Any]]:
+    connection = None
+    try:
+        connection = pymysql.connect(**DB_CONFIG)
+        with connection.cursor() as cursor:
+            sql = (
+                "SELECT id, title, content, created_at FROM kb_document "
+                "WHERE title LIKE %s OR content LIKE %s ORDER BY id DESC"
+            )
+            pattern = f"%{keyword.strip()}%"
+            cursor.execute(sql, (pattern, pattern))
+            return cursor.fetchall()
+    finally:
+        if connection is not None:
+            connection.close()
+
 
 @app.get("/")
-def health_check():
-    return {"status": "running", "message": "AI 后端服务已就绪，随时准备对接前端与大模型！"}
+def health_check() -> Dict[str, str]:
+    return {"status": "running", "message": "AI backend is ready"}
 
-# 核心检索接口：面试时必问的 RAG 数据源头接口
+
 @app.post("/api/kb/search")
-def search_documents(query: DocumentQuery):
-    connection = pymysql.connect(**DB_CONFIG)
+def search_documents(query: DocumentQuery) -> Dict[str, Any]:
     try:
-        with connection.cursor() as cursor:
-            # 使用模糊查询模拟知识库向量检索前的关键词召回
-            sql = "SELECT id, title, content, created_at FROM kb_document WHERE title LIKE %s OR content LIKE %s"
-            search_term = f"%{query.keyword}%"
-            cursor.execute(sql, (search_term, search_term))
-            results = cursor.fetchall()
-            return {
-                "code": 200,
-                "keyword": query.keyword,
-                "count": len(results),
-                "data": results
-            }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        connection.close()
+        results = query_documents(query.keyword)
+    except Exception as exc:
+        print(f"Database query failed: {exc}")
+        raise HTTPException(
+            status_code=503,
+            detail="Knowledge base is temporarily unavailable",
+        ) from exc
+    return {
+        "code": 200,
+        "keyword": query.keyword.strip(),
+        "count": len(results),
+        "data": results,
+    }
