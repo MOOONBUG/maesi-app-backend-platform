@@ -61,26 +61,29 @@ async def rag_stream_chat(request: RAGRequest):
     except Exception as e:
         print(f"数据库查询异常: {str(e)}")
 
-    if not matched_docs:
-        context_str = "未找到相关文档内容。"
-    else:
-        context_str = "\n".join([f"【文档{i+1}】{doc.get('content', '')}" for i, doc in enumerate(matched_docs)])
-
-    # 重构 System Prompt，锁定迈思品牌身份
-    system_prompt = (
-        "你是迈思信息（MaesiInfo）研发的企业知识库 RAG 智能助手。"
-        "【身份与回答原则】：\n"
-        "1. 当用户询问你的身份、你是谁或背景时，必须明确回答你是『迈思信息 AI 助手』，绝对不能提及 OpenAI、ChatGPT、GPT 或任何第三方底层模型名称。\n"
-        "2. 优先基于提供的【上下文】解答用户问题。\n"
-        "3. 当【上下文】未匹配到相关文档时，请明确提示用户『当前迈思知识库中暂无相关文档记载』，然后再基于通用知识给予专业解答。"
-    )
-    
-    user_prompt = f"上下文：\n{context_str}\n\n问题：{request.question}"
-
     def event_generator():
         try:
+            # 1. 优先推送关联数据源
             yield f"data: {json.dumps({'type': 'sources', 'data': matched_docs}, ensure_ascii=False)}\n\n"
             
+            # 2. 知识库未命中直接拦截，不传给 LLM
+            if not matched_docs:
+                reject_msg = "当前迈思知识库中暂无相关文档记载，无法回答与知识库无关的问题。"
+                yield f"data: {json.dumps({'type': 'content', 'data': reject_msg}, ensure_ascii=False)}\n\n"
+                yield f"data: {json.dumps({'type': 'done'}, ensure_ascii=False)}\n\n"
+                return
+
+            # 3. 命中知识库，严格约束边界调用 LLM
+            context_str = "\n".join([f"【文档{i+1}】{doc.get('content', '')}" for i, doc in enumerate(matched_docs)])
+            system_prompt = (
+                "你是迈思信息（MaesiInfo）研发的企业知识库 RAG 智能助手。\n"
+                "【严格回答原则】：\n"
+                "1. 你只能基于提供的【上下文】解答企业内部相关问题。\n"
+                "2. 绝对禁止回答写小说、闲聊、编写无关代码、解答非知识库范围的内容。\n"
+                "3. 绝对不能提及 OpenAI、ChatGPT、GPT 或任何第三方底层模型名称。"
+            )
+            user_prompt = f"上下文：\n{context_str}\n\n问题：{request.question}"
+
             stream = client.chat.completions.create(
                 model=LLM_MODEL_NAME,
                 messages=[
