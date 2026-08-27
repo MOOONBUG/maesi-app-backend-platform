@@ -88,3 +88,7 @@ python acceptance_test.py
 - 密钥泄露后应立即撤销并重新生成；
 - 修改 `.env` 或 `.env.secrets` 后必须重启后端；
 - 日志和 `acceptance_results.json` 可能含业务内容，分享前先脱敏。
+
+## Usage and intellectual property
+
+This is a source-available portfolio project, not an open-source release. It is provided only for portfolio review and recruitment technical evaluation. Access and review do not transfer intellectual-property rights. Copying, deployment, commercial use, or internal business use requires prior written permission.

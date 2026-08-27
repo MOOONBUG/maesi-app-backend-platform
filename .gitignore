@@ -1,12 +1,10 @@
-__pycache__/
-*.pyc
+﻿# Secrets
 .env
 .env.*
 !.env.example
-.idea/
-.vscode/
-venv/
-.venv/
+# Runtime and local artifacts
+__pycache__/
+*.py[cod]
 *.log
 *.bak
 *.bak-*
