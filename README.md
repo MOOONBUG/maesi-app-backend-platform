@@ -108,7 +108,7 @@ python acceptance_test.py
 
 ## Usage and intellectual property
 
-This is a source-available portfolio project, not an open-source release. It is provided only for portfolio review and recruitment technical evaluation. Access and review do not transfer intellectual-property rights. Copying, deployment, commercial use, or internal business use requires prior written permission.
+This is a source-available portfolio project for portfolio review and recruitment technical evaluation. Access and review do not transfer intellectual-property rights. Copying, deployment, commercial use, or internal business use requires prior written permission.
 
 
 
@@ -158,4 +158,4 @@ GRANT SELECT, INSERT, UPDATE ON ai_knowledge_db.diagnostic_record TO 'rag_app'@'
 FLUSH PRIVILEGES;
 ```
 
-授权完成后重启后端，并运行 `python gpuops_acceptance.py`；预期创建诊断记录的 `persisted=true`，且列表接口不再出现 `degraded=true`。
+授权完成后重启后端，并运行 `python gpuops_acceptance.py`；当前环境的预期结果为创建诊断记录 `persisted=true`，且列表接口不出现 `degraded=true`。

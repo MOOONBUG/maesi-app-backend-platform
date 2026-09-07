@@ -1,4 +1,4 @@
-﻿# Secrets
+# Secrets
 .env
 .env.*
 !.env.example
@@ -9,7 +9,6 @@ __pycache__/
 *.bak
 *.bak-*
 .repair-backup-*/
-acceptance_results.json
 acceptance_results.json
 *.secrets
 gpuops_acceptance_results.json

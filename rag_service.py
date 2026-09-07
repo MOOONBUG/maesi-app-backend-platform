@@ -19,11 +19,11 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"), override=True)
 load_dotenv(os.path.join(BASE_DIR, ".env.secrets"), override=True)
 
-app = FastAPI(title="GPU 集群运维知识库与智能诊断服务", version="4.0.0")
+app = FastAPI(title="GPU 集群运维知识库与智能诊断服务", version="4.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
