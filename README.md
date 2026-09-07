@@ -1,4 +1,4 @@
-﻿# GPU 集群运维知识库与智能诊断平台（GPUOps RAG Console）
+# GPU 集群运维知识库与智能诊断平台（GPUOps RAG Console）
 
 基于 **FastAPI + MySQL + Vue 3** 构建的 GPU 集群运维知识库与智能诊断平台，面向 GPU 运维/AI 基础设施岗位，支持故障手册检索、来源溯源、Bearer Token 鉴权、多 API Key 故障切换、SSE 流式回答，以及 NVIDIA GPU 主机状态采集与诊断入口。
 
@@ -112,3 +112,25 @@ This is a source-available portfolio project, not an open-source release. It is 
 
 
 
+
+## GPUOps 场景验收
+
+```powershell
+python gpuops_acceptance.py
+```
+
+验收内容：
+
+- 服务健康检查；
+- GPU 主机事实状态采集；
+- GPU 显存问题诊断记录创建；
+- 诊断记录列表查询；
+- MySQL 不可用时返回降级状态，不阻塞主服务。
+
+接口：
+
+```text
+GET  /api/v1/ops/gpu-snapshot
+POST /api/v1/ops/diagnostics
+GET  /api/v1/ops/diagnostics?limit=20
+```

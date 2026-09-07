@@ -1,7 +1,8 @@
-﻿import json
+import json
 import os
 import re
 from typing import Any, Dict, Iterator, List, Optional
+from datetime import datetime, timezone
 
 import pymysql
 from dotenv import load_dotenv
@@ -79,6 +80,12 @@ DOMAIN_EXPANSIONS = {
 class ChatTurn(BaseModel):
     role: str
     content: str = Field(..., max_length=4000)
+
+
+class DiagnosticRequest(BaseModel):
+    question: str = Field(..., min_length=1, max_length=2000)
+    host_id: Optional[int] = Field(default=None, ge=1)
+    severity: str = Field(default="INFO", pattern="^(INFO|WARNING|CRITICAL)$")
 
 
 class RAGRequest(BaseModel):
@@ -313,8 +320,8 @@ def stream_llm(question: str, docs: List[Dict[str, Any]], history: List[ChatTurn
 def health() -> Dict[str, Any]:
     return {
         "status": "running",
-        "service": "maesi-enterprise-rag",
-        "version": "3.0.0",
+        "service": "gpuops-rag-console",
+        "version": "4.1.0",
         "llm_configured": bool(llm_clients),
         "llm_channel_count": len(llm_clients),
     }
@@ -353,6 +360,59 @@ def gpu_snapshot() -> Dict[str, Any]:
     return collect_gpu_snapshot(
         timeout_seconds=float(os.getenv("GPU_SNAPSHOT_TIMEOUT", "3"))
     )
+@app.post("/api/v1/ops/diagnostics", dependencies=[Depends(verify_token)])
+def create_diagnostic(request: DiagnosticRequest) -> Dict[str, Any]:
+    """Create a traceable diagnostic record; database persistence is best-effort."""
+    created_at = datetime.now(timezone.utc).isoformat()
+    record = {
+        "question": request.question.strip(),
+        "host_id": request.host_id,
+        "severity": request.severity,
+        "result_mode": "pending",
+        "created_at": created_at,
+    }
+    connection = None
+    try:
+        connection = pymysql.connect(**DB_CONFIG)
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO diagnostic_record (host_id, question, severity, result_mode, evidence_json) VALUES (%s,%s,%s,%s,%s)",
+                (request.host_id, request.question.strip(), request.severity, "pending", json.dumps({"source": "gpuops_api"}, ensure_ascii=False)),
+            )
+            record["id"] = cursor.lastrowid
+        connection.commit()
+        record["persisted"] = True
+    except Exception as exc:
+        if connection is not None:
+            connection.rollback()
+        record["persisted"] = False
+        record["persistence_reason"] = type(exc).__name__
+    finally:
+        if connection is not None:
+            connection.close()
+    return {"code": 200, "data": record}
+
+
+@app.get("/api/v1/ops/diagnostics", dependencies=[Depends(verify_token)])
+def list_diagnostics(limit: int = 20) -> Dict[str, Any]:
+    """List recent diagnostic records for a lightweight operations console."""
+    limit = max(1, min(limit, 100))
+    connection = None
+    try:
+        connection = pymysql.connect(**DB_CONFIG)
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT id, host_id, question, severity, result_mode, created_at FROM diagnostic_record ORDER BY id DESC LIMIT %s",
+                (limit,),
+            )
+            rows = cursor.fetchall()
+        return {"code": 200, "data": rows}
+    except Exception:
+        return {"code": 200, "data": [], "degraded": True, "reason": "diagnostic table unavailable"}
+    finally:
+        if connection is not None:
+            connection.close()
+
 @app.post("/api/v1/ai/rag-stream-chat", dependencies=[Depends(verify_token)])
 async def rag_stream_chat(request: RAGRequest) -> StreamingResponse:
     question = request.question.strip()
