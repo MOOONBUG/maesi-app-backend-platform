@@ -145,3 +145,17 @@ GET  /api/v1/ops/diagnostics?limit=20
 首次启用诊断记录前执行 sql_gpuops_diagnostics.sql 创建 diagnostic_record 表。
 
 主页面左侧的“GPU 主机与诊断”入口会嵌入只读 GPU 运维控制台。
+
+### 诊断记录数据库权限说明
+
+首次启用诊断记录前，需要使用数据库管理员账号执行 `sql_gpuops_diagnostics.sql` 创建 `diagnostic_record` 表；应用账号 `rag_app` 还需要该表的 `SELECT`、`INSERT`、`UPDATE` 权限。当前项目验收已确认应用账号仅有数据库读取权限，因此诊断接口会保持降级返回，不会伪造持久化成功。
+
+管理员授权示例（请按实际账号和环境调整，不要把管理员密码写入项目文件）：
+
+```sql
+SOURCE sql_gpuops_diagnostics.sql;
+GRANT SELECT, INSERT, UPDATE ON ai_knowledge_db.diagnostic_record TO 'rag_app'@'127.0.0.1';
+FLUSH PRIVILEGES;
+```
+
+授权完成后重启后端，并运行 `python gpuops_acceptance.py`；预期创建诊断记录的 `persisted=true`，且列表接口不再出现 `degraded=true`。
