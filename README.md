@@ -134,3 +134,7 @@ GET  /api/v1/ops/gpu-snapshot
 POST /api/v1/ops/diagnostics
 GET  /api/v1/ops/diagnostics?limit=20
 ```
+
+### GPU 运维控制台
+
+直接打开 gpuops_console.html 可查看 GPU 主机快照和最近诊断记录。后端启动后，页面通过 /api/v1/ops/gpu-snapshot 和 /api/v1/ops/diagnostics 获取数据。
