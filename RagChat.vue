@@ -1,6 +1,6 @@
-<template>
+﻿<template>
   <div class="chat-container">
-    <h2>企业知识库 RAG 智能问答</h2>
+    <h2>GPU 集群运维 RAG 智能诊断</h2>
     <div class="chat-box" ref="chatBox">
       <div v-for="(msg, index) in messages" :key="index" :class="['msg', msg.role]">
         <div class="bubble">
@@ -16,7 +16,7 @@
     </div>
     
     <div class="input-box">
-      <input v-model="question" @keyup.enter="sendQuery" placeholder="输入你想查询的知识库内容..." :disabled="loading" />
+      <input v-model="question" @keyup.enter="sendQuery" placeholder="输入 GPU、CUDA、Docker 或监控告警问题..." :disabled="loading" />
       <button @click="sendQuery" :disabled="loading">{{ loading ? '生成中...' : '发送' }}</button>
     </div>
   </div>
@@ -113,3 +113,4 @@ const sendQuery = async () => {
 .input-box input { flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; }
 .input-box button { padding: 8px 16px; background: #28a745; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
 </style>
+

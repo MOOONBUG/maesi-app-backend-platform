@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import re
 from typing import Any, Dict, Iterator, List, Optional
@@ -12,12 +12,13 @@ from openai import OpenAI
 from pydantic import BaseModel, Field
 
 from data_pool import search_pool
+from gpu_ops import collect_gpu_snapshot
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"), override=True)
 load_dotenv(os.path.join(BASE_DIR, ".env.secrets"), override=True)
 
-app = FastAPI(title="迈思企业知识库 RAG 服务", version="3.0.0")
+app = FastAPI(title="GPU 集群运维知识库与智能诊断服务", version="4.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -345,6 +346,13 @@ def readiness() -> Dict[str, Any]:
     return result
 
 
+
+@app.get("/api/v1/ops/gpu-snapshot", dependencies=[Depends(verify_token)])
+def gpu_snapshot() -> Dict[str, Any]:
+    """Return read-only local GPU facts; never fabricate unavailable data."""
+    return collect_gpu_snapshot(
+        timeout_seconds=float(os.getenv("GPU_SNAPSHOT_TIMEOUT", "3"))
+    )
 @app.post("/api/v1/ai/rag-stream-chat", dependencies=[Depends(verify_token)])
 async def rag_stream_chat(request: RAGRequest) -> StreamingResponse:
     question = request.question.strip()
@@ -389,3 +397,6 @@ async def rag_stream_chat(request: RAGRequest) -> StreamingResponse:
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host=os.getenv("HOST", "127.0.0.1"), port=int(os.getenv("PORT", "8000")))
+
+
+

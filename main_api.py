@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"), override=True)
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env.secrets"), override=True)
-app = FastAPI(title="AI Knowledge Base Search API", version="1.1.0")
+app = FastAPI(title="GPUOps Knowledge Search API", version="2.0.0")
 
 
 def env_required(name: str) -> str:
@@ -74,3 +74,4 @@ def search_documents(query: DocumentQuery) -> Dict[str, Any]:
         "count": len(results),
         "data": results,
     }
+

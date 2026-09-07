@@ -1,6 +1,6 @@
-# 迈思企业知识库智能问答系统（MaesiInfo AI RAG System）
+﻿# GPU 集群运维知识库与智能诊断平台（GPUOps RAG Console）
 
-基于 **FastAPI + MySQL + Vue 3** 构建的企业 RAG 知识库问答系统，支持知识库检索、来源溯源、Bearer Token 鉴权、多 API Key 故障切换及 SSE 流式回答。
+基于 **FastAPI + MySQL + Vue 3** 构建的 GPU 集群运维知识库与智能诊断平台，面向 GPU 运维/AI 基础设施岗位，支持故障手册检索、来源溯源、Bearer Token 鉴权、多 API Key 故障切换、SSE 流式回答，以及 NVIDIA GPU 主机状态采集与诊断入口。
 
 ## 核心文件
 
@@ -81,6 +81,23 @@ python acceptance_test.py
 - **[启动与注意事项.md](启动与注意事项.md)**：启动、关闭、健康检查、验收、排障和敏感配置管理；
 - **文档注意事项.txt**：知识库录入、检索优化、权限和运维原则。
 
+## GPU 运维岗位定位
+
+本项目针对 GPU 运维工程师 / AI 基础设施岗位重构，重点展示：
+
+- Linux、Python 自动化和故障排查思路；
+- NVIDIA GPU、CUDA、驱动与容器运行时知识管理；
+- MySQL 元数据、任务状态、权限、审计和索引设计；
+- RAG 检索门禁、来源引用和不确定性控制；
+- `nvidia-smi` 只读状态采集，以及后续 DCGM/Prometheus/Grafana 接入位；
+- FastAPI、SSE、健康检查和安全配置。
+
+项目名称：**GPU 集群运维知识库与智能诊断平台（GPUOps RAG Console）**。
+
+详细架构与开源项目学习记录见：
+
+- [GPUOps 项目定位与架构](docs/GPUOps-项目定位与架构.md)
+- [开源项目学习与综合应用](docs/开源项目学习与综合应用.md)
 ## 安全提醒
 
 - 禁止分享或提交 `.env.secrets`；
@@ -92,3 +109,6 @@ python acceptance_test.py
 ## Usage and intellectual property
 
 This is a source-available portfolio project, not an open-source release. It is provided only for portfolio review and recruitment technical evaluation. Access and review do not transfer intellectual-property rights. Copying, deployment, commercial use, or internal business use requires prior written permission.
+
+
+
