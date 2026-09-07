@@ -164,7 +164,7 @@
     <div class="app-loading-overlay" :class="{ hidden: isSystemReady }">
         <div class="spinner"></div>
         <div style="font-size: 14px; font-weight: 500; color: var(--text-color);">
-            迈思 AI 引擎自检初始化中...
+            GPUOps 运维诊断引擎自检初始化中...
         </div>
     </div>
 
@@ -172,7 +172,7 @@
     <nav class="sidebar">
         <div class="logo-area">
             <span class="logo-circle"></span>
-            MaesiInfo AI
+            GPUOps Console
         </div>
 
         <div class="nav-list">
@@ -288,7 +288,7 @@
                 <h3>🔑 API 接入与鉴权</h3>
                 <div class="form-item">
                     <label>Bearer Authorization Token</label>
-                    <input type="text" value="Bearer local_acceptance_ae71ee511f5741049383f7898751a0c2" readonly />
+                    <input type="text" placeholder="本地 Bearer Token（从 .env.secrets 读取）" readonly />
                 </div>
                 <div class="form-item">
                     <label>单 IP 每分钟并发限制 (Rate Limit)</label>
@@ -392,7 +392,7 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': 'Bearer local_acceptance_ae71ee511f5741049383f7898751a0c2'
+                            'Authorization': 'Bearer ' + (localStorage.getItem('gpuops_token') || '')
                         },
                         body: JSON.stringify({ question: userQ, top_k: 5, history: messages.value.slice(-8, -2).map(m => ({ role: m.role, content: m.content })) })
                     })
@@ -447,5 +447,6 @@
 
 </body>
 </html>
+
 
 

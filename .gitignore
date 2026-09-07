@@ -10,3 +10,5 @@ __pycache__/
 *.bak-*
 .repair-backup-*/
 acceptance_results.json
+acceptance_results.json
+*.secrets
