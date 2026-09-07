@@ -1,4 +1,4 @@
--- GPUOps RAG Console diagnostic migration
+-- AppCore Service Platform diagnostic migration
 CREATE TABLE IF NOT EXISTS diagnostic_record (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   host_id INT NULL,

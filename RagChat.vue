@@ -1,6 +1,6 @@
-﻿<template>
+<template>
   <div class="chat-container">
-    <h2>GPU 集群运维 RAG 智能诊断</h2>
+    <h2>APP 服务端智能诊断与运维平台</h2>
     <div class="chat-box" ref="chatBox">
       <div v-for="(msg, index) in messages" :key="index" :class="['msg', msg.role]">
         <div class="bubble">

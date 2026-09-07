@@ -1,6 +1,6 @@
-# GPU 集群运维知识库与智能诊断平台（GPUOps RAG Console）
+# APP 服务端高并发微服务与 AI 运维平台（AppCore Service Platform）
 
-基于 **FastAPI + MySQL + Vue 3** 构建的 GPU 集群运维知识库与智能诊断平台，面向 GPU 运维/AI 基础设施岗位，支持故障手册检索、来源溯源、Bearer Token 鉴权、多 API Key 故障切换、SSE 流式回答，以及 NVIDIA GPU 主机状态采集与诊断入口。
+基于 **FastAPI + MySQL + Vue 3** 构建的 APP 服务端高并发微服务与 AI 运维平台，面向 APP 服务端开发工程师岗位，支持故障手册检索、来源溯源、Bearer Token 鉴权、多 API Key 故障切换、SSE 流式回答，以及 NVIDIA GPU 主机状态采集与诊断入口。
 
 ## 核心文件
 
@@ -91,9 +91,9 @@ python acceptance_test.py
 - `docs/岗位需求对照与工程化演示.md`：岗位要求映射、已验证边界和面试演示路径。
 
 这部分是可运行的工程化补强，不把尚未在真实 AWS 生产环境验证的能力包装成既有经验。
-## GPU 运维岗位定位
+## APP 服务端岗位定位
 
-本项目针对 GPU 运维工程师 / AI 基础设施岗位重构，重点展示：
+本项目针对 APP 服务端开发工程师岗位重构，重点展示：
 
 - Linux、Python 自动化和故障排查思路；
 - NVIDIA GPU、CUDA、驱动与容器运行时知识管理；
@@ -102,7 +102,7 @@ python acceptance_test.py
 - `nvidia-smi` 只读状态采集，以及后续 DCGM/Prometheus/Grafana 接入位；
 - FastAPI、SSE、健康检查和安全配置。
 
-项目名称：**GPU 集群运维知识库与智能诊断平台（GPUOps RAG Console）**。
+项目名称：**APP 服务端高并发微服务与 AI 运维平台（AppCore Service Platform）**。
 
 详细架构与开源项目学习记录见：
 

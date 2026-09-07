@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"), override=True)
 load_dotenv(os.path.join(BASE_DIR, ".env.secrets"), override=True)
 
-app = FastAPI(title="GPU 集群运维知识库与智能诊断服务", version="4.1.0")
+app = FastAPI(title="AppCore AI Operations Service", version="4.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -320,7 +320,7 @@ def stream_llm(question: str, docs: List[Dict[str, Any]], history: List[ChatTurn
 def health() -> Dict[str, Any]:
     return {
         "status": "running",
-        "service": "gpuops-rag-console",
+        "service": "appcore-service-platform",
         "version": "4.1.0",
         "llm_configured": bool(llm_clients),
         "llm_channel_count": len(llm_clients),

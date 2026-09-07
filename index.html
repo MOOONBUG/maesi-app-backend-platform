@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPU 集群运维知识库与智能诊断平台 | GPUOps RAG Console</title>
+    <title>APP 服务端高并发微服务与 AI 运维平台 | AppCore Service Platform</title>
     <!-- Vue 3 -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <!-- Marked Markdown 解析器 -->
@@ -164,7 +164,7 @@
     <div class="app-loading-overlay" :class="{ hidden: isSystemReady }">
         <div class="spinner"></div>
         <div style="font-size: 14px; font-weight: 500; color: var(--text-color);">
-            GPUOps 运维诊断引擎自检初始化中...
+            AppCore 智能诊断引擎自检初始化中...
         </div>
     </div>
 
@@ -172,7 +172,7 @@
     <nav class="sidebar">
         <div class="logo-area">
             <span class="logo-circle"></span>
-            GPUOps Console
+            AppCore Console
         </div>
 
         <div class="nav-list">
@@ -217,7 +217,7 @@
     <!-- 主界面：知识库问答 -->
     <div v-if="activeTab === 'chat'" class="chat-main">
         <div class="chat-header">
-            <span class="header-title">GPU 集群运维 RAG 智能诊断</span>
+            <span class="header-title">APP 服务端智能诊断与运维平台</span>
             <div class="header-status">
                 <span class="status-dot"></span>
                 服务已连接 - 实时流式响应
@@ -349,7 +349,7 @@
             const question = ref('')
             const isDarkMode = ref(false)
             const messages = ref([
-                { role: 'assistant', sources: null, content: '您好！我是 GPUOps 运维诊断助手。可以查询 GPU、CUDA、Docker、NVIDIA Container Toolkit、Prometheus/Grafana 和故障排查知识，并返回可核验的文档来源。' }
+                { role: 'assistant', sources: null, content: '您好！我是 AppCore 服务端诊断助手。可以查询 GPU、CUDA、Docker、NVIDIA Container Toolkit、Prometheus/Grafana 和故障排查知识，并返回可核验的文档来源。' }
             ])
             const loading = ref(false)
             const chatBox = ref(null)

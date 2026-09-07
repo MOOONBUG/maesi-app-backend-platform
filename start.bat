@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 chcp 65001 >nul
-title GPUOps RAG Console 一键启动
+title AppCore Service Platform 一键启动
 
 :: 1. 清理残留 8000 端口
 for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8000 ^| findstr LISTENING') do (

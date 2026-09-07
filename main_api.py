@@ -1,4 +1,4 @@
-﻿import os
+import os
 from typing import Any, Dict, List
 
 import pymysql
@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"), override=True)
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env.secrets"), override=True)
-app = FastAPI(title="GPUOps Knowledge Search API", version="2.0.0")
+app = FastAPI(title="AppCore Knowledge Search API", version="2.0.0")
 
 
 def env_required(name: str) -> str:
