@@ -148,7 +148,7 @@ GET  /api/v1/ops/diagnostics?limit=20
 
 ### 诊断记录数据库权限说明
 
-首次启用诊断记录前，需要使用数据库管理员账号执行 `sql_gpuops_diagnostics.sql` 创建 `diagnostic_record` 表；应用账号 `rag_app` 还需要该表的 `SELECT`、`INSERT`、`UPDATE` 权限。当前项目验收已确认应用账号仅有数据库读取权限，因此诊断接口会保持降级返回，不会伪造持久化成功。
+首次启用诊断记录前，需要使用数据库管理员账号执行 `sql_gpuops_diagnostics.sql` 创建 `diagnostic_record` 表；应用账号 `rag_app` 还需要该表的 `SELECT`、`INSERT`、`UPDATE` 权限。当前环境已完成授权，诊断接口验收确认 `persisted=true`，记录可从数据库列表接口读回。
 
 管理员授权示例（请按实际账号和环境调整，不要把管理员密码写入项目文件）：
 
