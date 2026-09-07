@@ -4,6 +4,7 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env.secrets"), override=True)
 BASE = os.getenv("GPUOPS_BASE_URL", "http://127.0.0.1:8000")
 TOKEN = os.getenv("BEARER_TOKEN", "")
 HEADERS = {"Authorization": "Bearer " + TOKEN}

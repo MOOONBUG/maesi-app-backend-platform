@@ -257,6 +257,12 @@
         </div>
     </div>
 
+    <!-- 主界面：GPU 主机与诊断 -->
+    <div v-if="activeTab === 'ops'" class="chat-main">
+        <div class="chat-header"><span class="header-title">GPU 主机状态与诊断台</span><div class="header-status"><span class="status-dot"></span>只读事实采集</div></div>
+        <iframe src="gpuops_console.html" title="GPU 主机状态与诊断台" style="width:100%;height:100%;border:0;background:#f5f8f7;"></iframe>
+    </div>
+
     <!-- 主界面：安全合规配置 -->
     <div v-if="activeTab === 'security'" class="chat-main">
         <div class="chat-header">

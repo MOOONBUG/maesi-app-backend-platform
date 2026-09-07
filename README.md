@@ -143,3 +143,5 @@ GET  /api/v1/ops/diagnostics?limit=20
 ### 数据库迁移
 
 首次启用诊断记录前执行 sql_gpuops_diagnostics.sql 创建 diagnostic_record 表。
+
+主页面左侧的“GPU 主机与诊断”入口会嵌入只读 GPU 运维控制台。

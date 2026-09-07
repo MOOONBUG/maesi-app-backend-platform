@@ -4,6 +4,7 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env.secrets"), override=True)
 URL = "http://127.0.0.1:8000/api/v1/ai/rag-stream-chat"
 HEADERS = {"Authorization": "Bearer " + os.getenv("BEARER_TOKEN", "")}
 CASES = [
