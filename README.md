@@ -81,6 +81,16 @@ python acceptance_test.py
 - **[启动与注意事项.md](启动与注意事项.md)**：启动、关闭、健康检查、验收、排障和敏感配置管理；
 - **文档注意事项.txt**：知识库录入、检索优化、权限和运维原则。
 
+## APP 服务端岗位能力扩展
+
+本仓库同时包含一组可独立运行的 Go APP 服务端演示模块，用于对应高并发、弱网重试、幂等和 Kubernetes 工程实践：
+
+- `gateway/cmd/app-gateway`：Go HTTP Gateway，包含请求 ID、超时、健康检查、优雅退出和幂等接口；
+- `deploy/k8s/app-gateway.yaml`：Kubernetes Deployment、Service、HPA、探针、资源限制和 NetworkPolicy；
+- `.github/workflows/quality.yml`：Go race detector 与 Python 语法质量门禁；
+- `docs/岗位需求对照与工程化演示.md`：岗位要求映射、已验证边界和面试演示路径。
+
+这部分是可运行的工程化补强，不把尚未在真实 AWS 生产环境验证的能力包装成既有经验。
 ## GPU 运维岗位定位
 
 本项目针对 GPU 运维工程师 / AI 基础设施岗位重构，重点展示：
