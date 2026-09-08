@@ -1,6 +1,8 @@
 # MAESI APP 后端服务平台
 
-**Maesi App Backend Platform** 是一个面向 APP 后端工程岗位的可运行型技术作品集项目，围绕 **FastAPI + MySQL + Vue 3 + Go + Kubernetes** 展示 AI 知识库问答、流式接口、GPU 运维诊断和后端工程化能力。
+> 基于 FastAPI、MySQL、Vue 3、Go 与 Kubernetes 的 APP 后端工程实践，集成 RAG 知识库问答、SSE 流式接口和 GPU 运维诊断。
+
+**Maesi App Backend Platform** 是一个面向 APP 后端工程岗位的可运行型技术作品集项目。项目以 FastAPI 作为核心服务层、MySQL 承载知识库与诊断数据、Vue 3 提供交互界面，并通过 Go Gateway、Kubernetes 清单、自动化测试和安全配置展示完整的后端工程交付能力。
 
 > 本项目用于技术作品集、岗位评审和本地演示。仓库只提交示例配置和源代码；真实数据库密码、模型 API Key、Bearer Token 以及业务数据均保留在本地，不进入 Git。
 
