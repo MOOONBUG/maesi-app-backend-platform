@@ -1,94 +1,125 @@
-# 迈思企业知识库智能问答系统（MaesiInfo AI RAG System）
+# MAESI APP 后端服务平台
 
-基于 **FastAPI + MySQL + Vue 3** 构建的企业 RAG 知识库问答系统，支持知识库检索、来源溯源、Bearer Token 鉴权、多 API Key 故障切换及 SSE 流式回答。
+**Maesi App Backend Platform** 是一个面向 APP 后端工程岗位的可运行型技术作品集项目，围绕 **FastAPI + MySQL + Vue 3 + Go + Kubernetes** 展示 AI 知识库问答、流式接口、GPU 运维诊断和后端工程化能力。
 
-## 核心文件
+> 本项目用于技术作品集、岗位评审和本地演示。仓库只提交示例配置和源代码；真实数据库密码、模型 API Key、Bearer Token 以及业务数据均保留在本地，不进入 Git。
 
-```text
-index.html              前端页面
-rag_service.py          RAG FastAPI 后端
-main_api.py             其他 API 服务代码
-.env                    非敏感运行配置
-.env.secrets            敏感配置，禁止分享或提交 Git
-start.bat               可见窗口一键启动
-start.vbs               静默一键启动
-acceptance_test.py      端到端验收脚本
-启动与注意事项.md       完整启动、验收、排障和安全说明
-文档注意事项.txt        知识库录入与运维原则
-```
+## 项目能力
 
-## 快速启动
+- **RAG 知识库问答**：基于 MySQL 知识库检索，支持来源引用、无匹配门禁和 SSE 流式响应。
+- **安全接口**：统一 Bearer Token 鉴权，多 API Key 切换，敏感配置通过环境变量注入。
+- **GPU 运维入口**：只读采集 NVIDIA 主机状态，提供显存问题诊断记录和降级处理。
+- **APP 后端工程实践**：FastAPI 健康检查、超时控制、事务与权限设计、Go Gateway、幂等接口和 Kubernetes 清单。
+- **可验证交付**：包含 Python 语法检查、Go race detector、端到端验收和 GPUOps 验收脚本。
+
+## 主要入口
+
+| 路径 | 作用 |
+|---|---|
+| `rag_service.py` | FastAPI RAG、鉴权、SSE 和 GPUOps API |
+| `index.html` | 本地演示前端和 GPU 运维入口 |
+| `gpuops_console.html` | GPU 快照与诊断记录控制台 |
+| `gateway/cmd/app-gateway` | Go HTTP Gateway 演示 |
+| `deploy/k8s/app-gateway.yaml` | Kubernetes 部署、Service、HPA、探针和 NetworkPolicy |
+| `.env.example` | 可公开提交的配置模板，不含真实密钥 |
+| `acceptance_test.py` | RAG 接口端到端验收 |
+| `gpuops_acceptance.py` | GPUOps 场景验收 |
+| `启动与注意事项.md` | Windows 本地启动、排障和运行说明 |
+
+## 快速开始（Windows）
 
 ### 1. 安装依赖
 
+建议使用 Python 3.10+、MySQL 8.x、Go 1.23+。GPU 功能需要 NVIDIA 驱动和可用的 `nvidia-smi`；没有 GPU 时，主服务仍可运行，但 GPU 快照会返回不可用状态。
+
 ```powershell
 cd /d "D:\数据图表类工具\MySQL数据"
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 ```
 
-### 2. 检查配置
+### 2. 创建本地配置
 
-确保项目根目录存在：
-
-```text
-.env
-.env.secrets
+```powershell
+Copy-Item .env.example .env
 ```
 
-`.env.secrets` 必须包含数据库密码、模型 API Key 和接口 Bearer Token。不要把真实密钥写入 README 或提交到 Git。
+在项目根目录保留本地 `.env.secrets`，写入真实敏感配置：
 
-### 3. 启动
-
-直接双击：
-
-```text
-start.vbs
+```env
+DB_PASSWORD=本地数据库密码
+OPENAI_API_KEY=主模型APIKey
+OPENAI_API_KEYS=主Key,备用Key
+BEARER_TOKEN=本地接口Token
 ```
 
-需要查看后端窗口时双击：
+`.env`、`.env.secrets`、日志、验收结果和本地备份均不提交 Git。不要把真实密钥放入 README、Issue、截图、日志或聊天记录。
 
-```text
-start.bat
+### 3. 初始化诊断表（可选）
+
+需要保存 GPU 诊断记录时，使用数据库管理员账号执行：
+
+```sql
+SOURCE sql_gpuops_diagnostics.sql;
+GRANT SELECT, INSERT, UPDATE ON ai_knowledge_db.diagnostic_record TO 'rag_app'@'127.0.0.1';
 ```
 
-也可手动启动：
+请按实际数据库名、账号和权限策略调整，管理员密码不要写入项目文件。
+
+### 4. 启动服务
+
+静默启动并打开本地页面：双击 `start.vbs`。需要查看后端窗口和实时错误时：双击 `start.bat`。
+
+也可以手动启动：
 
 ```powershell
 python -m uvicorn rag_service:app --host 127.0.0.1 --port 8000
 ```
 
-### 4. 检查
+### 5. 验证流程
 
-健康检查：
+1. 打开 `http://127.0.0.1:8000/health`，确认服务存活；
+2. 打开 `http://127.0.0.1:8000/health/ready`，确认数据库、知识库和模型配置就绪；
+3. 打开 `index.html`，在页面中填写本地 Token 后测试问答；
+4. 执行 RAG 验收：`python acceptance_test.py`；
+5. 执行 GPUOps 验收：`python gpuops_acceptance.py`。
 
-```text
-http://127.0.0.1:8000/health
-http://127.0.0.1:8000/health/ready
-```
+有效知识库问题预期返回 `mode=llm`；无相关知识的问题应返回 `mode=no_match`。MySQL 不可用时，GPU 诊断接口按设计返回降级状态，不阻塞主服务。
 
-完整验收：
+## API 入口
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET | `/health` | 存活检查 |
+| GET | `/health/ready` | 数据库、知识库和模型就绪检查 |
+| POST | `/api/v1/ai/rag-stream-chat` | SSE 流式 RAG 问答，需要 Bearer Token |
+| GET | `/api/v1/ops/gpu-snapshot` | 只读 GPU 主机快照，需要 Bearer Token |
+| POST | `/api/v1/ops/diagnostics` | 创建 GPU 诊断记录，需要 Bearer Token |
+| GET | `/api/v1/ops/diagnostics?limit=20` | 查询诊断记录，需要 Bearer Token |
+
+## 质量检查
 
 ```powershell
-python acceptance_test.py
+python -m py_compile rag_service.py gpu_ops.py gpuops_acceptance.py acceptance_test.py
+Set-Location gateway
+go test -race ./...
+Set-Location ..
+git diff --check
 ```
 
-有效知识库问题应返回 `mode=llm`；没有相关知识时应返回 `mode=no_match`。
+GitHub Actions 会在 Push 和 Pull Request 中执行 Python 语法检查及 Go race detector。
 
-## 详细说明
+## 安全与本地文件策略
 
-请阅读：
+可提交内容包括源代码、脱敏配置模板、SQL 结构、Kubernetes 清单、测试脚本和通用文档；不可提交内容包括 `.env`、`.env.secrets`、数据库导出、日志、验收输出、密钥、Token 和业务知识库内容。
 
-- **[启动与注意事项.md](启动与注意事项.md)**：启动、关闭、健康检查、验收、排障和敏感配置管理；
-- **文档注意事项.txt**：知识库录入、检索优化、权限和运维原则。
+本地备份目录（包括 `.repair-backup-*`）不会被清除，仅由 Git 忽略。若密钥曾经进入 Git、网盘或聊天记录，应先撤销并重新生成；仅删除当前文件不能清除 Git 历史风险。详见 [SECURITY.md](SECURITY.md)。
 
-## 安全提醒
+## 项目边界
 
-- 禁止分享或提交 `.env.secrets`；
-- 不要在日志、截图、聊天或文档中粘贴真实密钥；
-- 密钥泄露后应立即撤销并重新生成；
-- 修改 `.env` 或 `.env.secrets` 后必须重启后端；
-- 日志和 `acceptance_results.json` 可能含业务内容，分享前先脱敏。
+这是一个可运行的工程化演示项目，不将尚未在真实 AWS 或生产集群验证的能力包装成生产经验。GPU 指标当前以 `nvidia-smi` 只读采集为主，生产环境可进一步接入 DCGM Exporter、Prometheus 和 Grafana。
 
-## Usage and intellectual property
+## 知识产权
 
-This is a source-available portfolio project, not an open-source release. It is provided only for portfolio review and recruitment technical evaluation. Access and review do not transfer intellectual-property rights. Copying, deployment, commercial use, or internal business use requires prior written permission.
+This is a source-available portfolio project for portfolio review and recruitment technical evaluation. Access and review do not transfer intellectual-property rights. Copying, deployment, commercial use, or internal business use requires prior written permission.

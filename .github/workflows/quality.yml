@@ -1,0 +1,16 @@
+name: quality-gates
+on: [push, pull_request]
+jobs:
+ test:
+  runs-on: ubuntu-latest
+  steps:
+  - uses: actions/checkout@v4
+  - uses: actions/setup-go@v5
+    with: {go-version: '1.23', cache-dependency-path: gateway/go.mod}
+  - name: Go tests and race detector
+    working-directory: gateway
+    run: go test -race ./...
+  - uses: actions/setup-python@v5
+    with: {python-version: '3.12'}
+  - name: Python syntax check
+    run: python -m py_compile rag_service.py gpu_ops.py gpuops_acceptance.py acceptance_test.py

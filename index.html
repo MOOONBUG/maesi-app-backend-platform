@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>迈思企业知识库智能问答系统 | MaesiInfo AI</title>
+    <title>APP 鏈嶅姟绔珮骞跺彂寰湇鍔′笌 AI 杩愮淮骞冲彴 | Maesi App Backend Platform</title>
     <!-- Vue 3 -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <!-- Marked Markdown 解析器 -->
+    <!-- Marked Markdown 瑙ｆ瀽鍣?-->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
-            /* 浅色模式变量 */
+            /* 娴呰壊妯″紡鍙橀噺 */
             --bg-color: #f4f7f9;
             --sidebar-bg: #001529;
             --sidebar-text: #ffffff;
@@ -30,7 +30,7 @@
             --shadow: 0 4px 16px rgba(0,0,0,0.06);
         }
 
-        /* 暗黑模式变量 */
+        /* 鏆楅粦妯″紡鍙橀噺 */
         body.dark-theme {
             --bg-color: #0f172a;
             --sidebar-bg: #1e293b;
@@ -56,7 +56,7 @@
 
         .main-wrapper { display: flex; height: 100vh; overflow: hidden; }
 
-        /* 左侧边栏 */
+        /* 宸︿晶杈规爮 */
         .sidebar { width: 250px; background: var(--sidebar-bg); color: var(--sidebar-text); padding: 20px 16px; display: flex; flex-direction: column; flex-shrink: 0; transition: background 0.3s; }
         .logo-area { font-size: 18px; font-weight: 600; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; color: var(--sidebar-text); padding: 0 8px; }
         .logo-circle { width: 10px; height: 10px; background: #1890ff; border-radius: 50%; }
@@ -66,23 +66,23 @@
         .nav-item:hover { background: var(--sidebar-item-hover); opacity: 1; }
         .nav-item.active { background: var(--sidebar-item-active); opacity: 1; font-weight: 500; }
 
-        /* 左下角通知栏与主题切换 */
+        /* 宸︿笅瑙掗€氱煡鏍忎笌涓婚鍒囨崲 */
         .sidebar-bottom { margin-top: auto; display: flex; flex-direction: column; gap: 14px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); }
-        
+
         .notice-box { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 12px; font-size: 12px; color: rgba(255, 255, 255, 0.85); line-height: 1.5; }
         .notice-header { font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; color: #38bdf8; }
-        
+
         .theme-toggle-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; border-radius: 8px; padding: 10px 12px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 13px; transition: all 0.2s; }
         .theme-toggle-btn:hover { background: rgba(255, 255, 255, 0.15); }
 
-        /* 主界面容器 */
+        /* 涓荤晫闈㈠鍣?*/
         .chat-main { flex: 1; display: flex; flex-direction: column; background: var(--chat-bg); margin: 16px; border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: var(--shadow); transition: background 0.3s; }
         .chat-header { padding: 16px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--header-bg); }
         .header-title { font-size: 16px; font-weight: 600; color: var(--text-color); }
         .header-status { font-size: 12px; color: #10b981; display: flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 20px; }
         .status-dot { width: 6px; height: 6px; background: #10b981; border-radius: 50%; display: inline-block; }
 
-        /* 对话区 */
+        /* 瀵硅瘽鍖?*/
         .chat-box { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; }
         .msg { display: flex; align-items: flex-start; gap: 12px; max-width: 85%; animation: fadeIn 0.25s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -110,14 +110,14 @@
         .sources strong { display: block; margin-bottom: 6px; color: var(--text-color); }
         .sources ul { margin: 0; padding-left: 16px; }
 
-        /* 输入框区域 */
+        /* 杈撳叆妗嗗尯鍩?*/
         .input-box { padding: 16px 24px; border-top: 1px solid var(--border-color); background: var(--header-bg); display: flex; gap: 12px; align-items: flex-end; }
         textarea { flex: 1; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; resize: none; height: 52px; outline: none; font-family: inherit; font-size: 14px; background: var(--input-bg); color: var(--text-color); }
         textarea:focus { border-color: var(--primary-color); }
         .send-btn { padding: 0 20px; height: 52px; background: var(--primary-color); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; display: flex; align-items: center; transition: background 0.2s; }
         .send-btn:hover { background: var(--primary-hover); }
 
-        /* 安全合规配置面板样式 */
+        /* 瀹夊叏鍚堣閰嶇疆闈㈡澘鏍峰紡 */
         .config-panel { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; }
         .config-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; }
         .config-card h3 { margin-top: 0; font-size: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; color: var(--text-color); }
@@ -130,7 +130,7 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
-        /* 无痕启动全屏加载蒙层 */
+        /* 鏃犵棔鍚姩鍏ㄥ睆鍔犺浇钂欏眰 */
         .app-loading-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -160,81 +160,85 @@
 <body>
 
 <div id="app" class="main-wrapper">
-    <!-- 无痕启动全屏加载蒙层 -->
+    <!-- 鏃犵棔鍚姩鍏ㄥ睆鍔犺浇钂欏眰 -->
     <div class="app-loading-overlay" :class="{ hidden: isSystemReady }">
         <div class="spinner"></div>
         <div style="font-size: 14px; font-weight: 500; color: var(--text-color);">
-            迈思 AI 引擎自检初始化中...
+            AppCore 鏅鸿兘璇婃柇寮曟搸鑷鍒濆鍖栦腑...
         </div>
     </div>
 
-    <!-- 左侧侧边栏 -->
+    <!-- 宸︿晶渚ц竟鏍?-->
     <nav class="sidebar">
         <div class="logo-area">
             <span class="logo-circle"></span>
-            MaesiInfo AI
+            AppCore Console
         </div>
 
         <div class="nav-list">
-            <div 
-                :class="['nav-item', activeTab === 'chat' ? 'active' : '']" 
+            <div
+                :class="['nav-item', activeTab === 'chat' ? 'active' : '']"
                 @click="activeTab = 'chat'"
             >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                知识库问答
+                鐭ヨ瘑搴撻棶绛?
             </div>
-            <div 
-                :class="['nav-item', activeTab === 'security' ? 'active' : '']" 
+            <div
+                :class="['nav-item', activeTab === 'security' ? 'active' : '']"
                 @click="activeTab = 'security'"
             >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                安全合规配置
+                瀹夊叏鍚堣閰嶇疆
+            </div>
+            <div :class="['nav-item', activeTab === 'ops' ? 'active' : '']" @click="activeTab = 'ops'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 8h10M7 12h5M7 16h8"></path></svg>
+                GPU 涓绘満涓庤瘖鏂?
             </div>
         </div>
 
-        <!-- 左下角组件区域 -->
+        <!-- 宸︿笅瑙掔粍浠跺尯鍩?-->
         <div class="sidebar-bottom">
-            <!-- 企业内部公告 -->
+            <!-- 浼佷笟鍐呴儴鍏憡 -->
             <div class="notice-box">
                 <div class="notice-header">
-                    <span>📢 内部公示</span>
+                    <span>馃摙 鍐呴儴鍏ず</span>
                 </div>
-                知识库系统升级维护完成，知识库模型已同步更新，请规范查询。
+                鐭ヨ瘑搴撶郴缁熷崌绾х淮鎶ゅ畬鎴愶紝鐭ヨ瘑搴撴ā鍨嬪凡鍚屾鏇存柊锛岃瑙勮寖鏌ヨ銆?
             </div>
 
-            <!-- 黑白/深浅主题切换按钮 -->
+            <!-- 榛戠櫧/娣辨祬涓婚鍒囨崲鎸夐挳 -->
             <button class="theme-toggle-btn" @click="toggleTheme">
-                <span>{{ isDarkMode ? '🌙 深色模式' : '☀️ 浅色模式' }}</span>
-                <span style="font-size: 11px; opacity: 0.7;">切换主题</span>
+                <span>{{ isDarkMode ? '馃寵 娣辫壊妯″紡' : '鈽€锔?娴呰壊妯″紡' }}</span>
+                <span style="font-size: 11px; opacity: 0.7;">鍒囨崲涓婚</span>
             </button>
         </div>
     </nav>
 
-    <!-- 主界面：知识库问答 -->
+    <!-- 涓荤晫闈細鐭ヨ瘑搴撻棶绛?-->
     <div v-if="activeTab === 'chat'" class="chat-main">
         <div class="chat-header">
-            <span class="header-title">企业知识库 RAG 智能问答</span>
+            <span class="header-title">APP 鏈嶅姟绔櫤鑳借瘖鏂笌杩愮淮骞冲彴</span>
             <div class="header-status">
                 <span class="status-dot"></span>
-                服务已连接 - 实时流式响应
+                鏈嶅姟宸茶繛鎺?- 瀹炴椂娴佸紡鍝嶅簲
             </div>
         </div>
-        
+
         <div class="chat-box" ref="chatBox">
             <div v-for="(msg, index) in messages" :key="index" :class="['msg', msg.role]">
-                <div class="avatar">{{ msg.role === 'user' ? '我' : 'AI' }}</div>
+                <div class="avatar">{{ msg.role === 'user' ? '鎴? : 'AI' }}</div>
                 <div class="bubble-wrapper">
                     <div class="bubble">
                         <div v-if="msg.sources && msg.sources.length > 0" class="sources">
-                            <strong>🔍 命中知识库参考来源：</strong>
+                            <strong>馃攳 鍛戒腑鐭ヨ瘑搴撳弬鑰冩潵婧愶細</strong>
                             <ul>
                                 <li v-for="doc in msg.sources" :key="doc.id">
-                                    文档: {{ doc.title }}
+                                    鏂囨。: {{ doc.title }}
                                 </li>
                             </ul>
                         </div>
                         <div v-if="msg.suggestions && msg.suggestions.length" class="suggestions">
-                            <span class="suggestions-label">你还可以问</span>
+                            <span class="suggestions-label">浣犺繕鍙互闂?/span>
                             <button v-for="item in msg.suggestions" :key="item" @click="question = item">{{ item }}</button>
                         </div>
                         <div class="markdown-body" v-html="renderMarkdown(msg.content)"></div>
@@ -245,70 +249,76 @@
         </div>
 
         <div class="input-box">
-            <textarea 
-                v-model="question" 
+            <textarea
+                v-model="question"
                 @keydown.enter="handleEnter"
-                placeholder="输入您的问题（Enter 发送，Shift + Enter 换行）..." 
+                placeholder="杈撳叆鎮ㄧ殑闂锛圗nter 鍙戦€侊紝Shift + Enter 鎹㈣锛?.."
                 :disabled="loading"
             ></textarea>
             <button @click="sendQuery" :disabled="loading" class="send-btn">
-                <span>发送</span>
+                <span>鍙戦€?/span>
             </button>
         </div>
     </div>
 
-    <!-- 主界面：安全合规配置 -->
+    <!-- 涓荤晫闈細GPU 涓绘満涓庤瘖鏂?-->
+    <div v-if="activeTab === 'ops'" class="chat-main">
+        <div class="chat-header"><span class="header-title">GPU 涓绘満鐘舵€佷笌璇婃柇鍙?/span><div class="header-status"><span class="status-dot"></span>鍙浜嬪疄閲囬泦</div></div>
+        <iframe src="gpuops_console.html" title="GPU 涓绘満鐘舵€佷笌璇婃柇鍙? style="width:100%;height:100%;border:0;background:#f5f8f7;"></iframe>
+    </div>
+
+    <!-- 涓荤晫闈細瀹夊叏鍚堣閰嶇疆 -->
     <div v-if="activeTab === 'security'" class="chat-main">
         <div class="chat-header">
-            <span class="header-title">企业级 AI 安全与合规配置中心</span>
+            <span class="header-title">浼佷笟绾?AI 瀹夊叏涓庡悎瑙勯厤缃腑蹇?/span>
             <div class="header-status">
                 <span class="status-dot"></span>
-                防护网关运行中
+                闃叉姢缃戝叧杩愯涓?
             </div>
         </div>
 
         <div class="config-panel">
             <div class="config-card">
-                <h3>🛡️ 数据安全与隐私保护</h3>
+                <h3>馃洝锔?鏁版嵁瀹夊叏涓庨殣绉佷繚鎶?/h3>
                 <div class="switch-item">
-                    <span>敏感词过滤与防泄漏 (PII Interceptor)</span>
-                    <span class="badge">已启用</span>
+                    <span>鏁忔劅璇嶈繃婊や笌闃叉硠婕?(PII Interceptor)</span>
+                    <span class="badge">宸插惎鐢?/span>
                 </div>
                 <div class="switch-item">
-                    <span>企业级角色权限隔离 (RBAC)</span>
-                    <span class="badge">已生效</span>
+                    <span>浼佷笟绾ц鑹叉潈闄愰殧绂?(RBAC)</span>
+                    <span class="badge">宸茬敓鏁?/span>
                 </div>
                 <div class="switch-item">
-                    <span>模型对话日志盲取加密</span>
+                    <span>妯″瀷瀵硅瘽鏃ュ織鐩插彇鍔犲瘑</span>
                     <span class="badge">AES-256</span>
                 </div>
             </div>
 
             <div class="config-card">
-                <h3>🔑 API 接入与鉴权</h3>
+                <h3>馃攽 API 鎺ュ叆涓庨壌鏉?/h3>
                 <div class="form-item">
                     <label>Bearer Authorization Token</label>
-                    <input type="text" value="Bearer local_acceptance_ae71ee511f5741049383f7898751a0c2" readonly />
+                    <input type="text" placeholder="鏈湴 Bearer Token锛堜粠 .env.secrets 璇诲彇锛? readonly />
                 </div>
                 <div class="form-item">
-                    <label>单 IP 每分钟并发限制 (Rate Limit)</label>
+                    <label>鍗?IP 姣忓垎閽熷苟鍙戦檺鍒?(Rate Limit)</label>
                     <select>
-                        <option>60 次 / 分钟</option>
-                        <option selected>120 次 / 分钟</option>
-                        <option>无限制</option>
+                        <option>60 娆?/ 鍒嗛挓</option>
+                        <option selected>120 娆?/ 鍒嗛挓</option>
+                        <option>鏃犻檺鍒?/option>
                     </select>
                 </div>
             </div>
 
             <div class="config-card">
-                <h3>📊 监控与审计轨迹</h3>
+                <h3>馃搳 鐩戞帶涓庡璁¤建杩?/h3>
                 <div class="switch-item">
-                    <span>向量检索 Top-K 相关性阈值</span>
-                    <span style="font-weight: 500;">≥ 0.75</span>
+                    <span>鍚戦噺妫€绱?Top-K 鐩稿叧鎬ч槇鍊?/span>
+                    <span style="font-weight: 500;">鈮?0.75</span>
                 </div>
                 <div class="switch-item">
-                    <span>实时 Token 消耗统计分析</span>
-                    <span class="badge">已开启监控</span>
+                    <span>瀹炴椂 Token 娑堣€楃粺璁″垎鏋?/span>
+                    <span class="badge">宸插紑鍚洃鎺?/span>
                 </div>
             </div>
         </div>
@@ -322,7 +332,7 @@
         setup() {
             const isSystemReady = ref(false)
 
-            // 探针检测后端 FastAPI 服务就绪状态
+            // 鎺㈤拡妫€娴嬪悗绔?FastAPI 鏈嶅姟灏辩华鐘舵€?
             const checkHealth = async () => {
                 try {
                     const res = await fetch('http://127.0.0.1:8000/docs', { method: 'HEAD' })
@@ -339,7 +349,7 @@
             const question = ref('')
             const isDarkMode = ref(false)
             const messages = ref([
-                { role: 'assistant', sources: null, content: '您好！我是迈思信息 AI 助手，请在下方输入您的问题，我将基于企业知识库为您提供专业解答。' }
+                { role: 'assistant', sources: null, content: '鎮ㄥソ锛佹垜鏄?AppCore 鏈嶅姟绔瘖鏂姪鎵嬨€傚彲浠ユ煡璇?GPU銆丆UDA銆丏ocker銆丯VIDIA Container Toolkit銆丳rometheus/Grafana 鍜屾晠闅滄帓鏌ョ煡璇嗭紝骞惰繑鍥炲彲鏍搁獙鐨勬枃妗ｆ潵婧愩€? }
             ])
             const loading = ref(false)
             const chatBox = ref(null)
@@ -378,13 +388,13 @@
 
                 const userQ = question.value
                 question.value = ''
-                
+
                 messages.value.push({ role: 'user', sources: null, content: userQ })
                 scrollToBottom()
 
                 messages.value.push({ role: 'assistant', sources: null, content: '' })
                 const assistantMsg = messages.value[messages.value.length - 1]
-                
+
                 loading.value = true
 
                 try {
@@ -392,7 +402,7 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': 'Bearer local_acceptance_ae71ee511f5741049383f7898751a0c2'
+                            'Authorization': 'Bearer ' + (localStorage.getItem('gpuops_token') || '')
                         },
                         body: JSON.stringify({ question: userQ, top_k: 5, history: messages.value.slice(-8, -2).map(m => ({ role: m.role, content: m.content })) })
                     })
@@ -406,7 +416,7 @@
                     while (true) {
                         const { value, done } = await reader.read()
                         if (done) break
-                        
+
                         buffer += decoder.decode(value, { stream: true })
                         const lines = buffer.split('\n\n')
                         buffer = lines.pop()
@@ -429,13 +439,13 @@
                                         loading.value = false
                                     }
                                 } catch (e) {
-                                    console.error('JSON 解析失败', e)
+                                    console.error('JSON 瑙ｆ瀽澶辫触', e)
                                 }
                             }
                         }
                     }
                 } catch (err) {
-                    assistantMsg.content += `\n\n[系统错误]: 连接后端失败 (${err.message})`
+                    assistantMsg.content += `\n\n[绯荤粺閿欒]: 杩炴帴鍚庣澶辫触 (${err.message})`
                     loading.value = false
                 }
             }
@@ -447,3 +457,7 @@
 
 </body>
 </html>
+
+
+
+

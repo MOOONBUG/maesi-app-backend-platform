@@ -1,12 +1,34 @@
-﻿# Secrets
+# Local secrets and environment files
 .env
 .env.*
 !.env.example
-# Runtime and local artifacts
+*.secrets
+
+# Python / Node / Go local artifacts
+.venv/
+venv/
 __pycache__/
 *.py[cod]
+*.egg-info/
+node_modules/
+coverage/
+
+# Runtime output and local data
 *.log
+*.out
+*.err
+*.sqlite3
+*.db
+*.dump
+*.sql.gz
+acceptance_results.json
+gpuops_acceptance_results.json
+runtime_backend.*
+
+# Local backups and editor files
+.repair-backup-*/
 *.bak
 *.bak-*
-.repair-backup-*/
-acceptance_results.json
+*.swp
+.DS_Store
+Thumbs.db
