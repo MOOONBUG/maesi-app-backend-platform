@@ -1,0 +1,11 @@
+{
+  "name": "a-share-quant-engine",
+  "version": "1.0.0",
+  "description": "A股量化回测引擎：支持双源降级、ATR动态头寸管理与硬风控机制",
+  "type": "module",
+  "author": "陈曦",
+  "keywords": ["量化交易", "A股", "风控引擎", "Node.js", "回测"],
+  "scripts": {
+    "backtest": "node backtest.js"
+  }
+}
