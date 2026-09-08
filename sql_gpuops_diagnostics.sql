@@ -1,4 +1,4 @@
--- AppCore Service Platform diagnostic migration
+-- Maesi App Backend Platform diagnostic migration
 CREATE TABLE IF NOT EXISTS diagnostic_record (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   host_id INT NULL,
@@ -10,3 +10,4 @@ CREATE TABLE IF NOT EXISTS diagnostic_record (
   INDEX idx_diagnostic_created_at (created_at),
   INDEX idx_diagnostic_severity (severity)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
